@@ -1,0 +1,4 @@
+cmake-build-debug
+__pycache__
+*.so
+.idea
