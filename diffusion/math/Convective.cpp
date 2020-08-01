@@ -11,7 +11,7 @@ Convective::Convective(Props &props,
 void Convective::calcOmegaCartes() {
 
     for (int i = 0; i < beta.size(); i++)
-        omegaCartesian[i] = props.lenZ * props.lenY;
+        omegaCartesian[i] = props.lenX * props.lenZ;
 }
 
 std::vector<double>

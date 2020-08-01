@@ -34,8 +34,8 @@ void Local::calcMatrCoordCurr(const double &radius,
 void Local::calcVolCartesian() {
 
     for (int i = 0; i < alpha.size(); i++)
-        volCartes[i] = props.lenY * props.lenZ *
-                       (props.XCoordOut - props.XCoordIn) /
+        volCartes[i] = props.lenX * props.lenZ *
+                       (props.YCoordOut - props.YCoordIn) /
                        props.gridBlockN;
 }
 

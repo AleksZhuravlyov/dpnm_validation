@@ -116,7 +116,7 @@ void Equation::calcVelocity() {
   velocity = 0;
   for (int i = 0; i < conc[iCurr].size(); i++)
     velocity -= conc[iCurr][i] - conc[iPrev][i];
-  velocity /= props.density * props.lenY * props.lenZ;
+  velocity /= props.density * props.lenX * props.lenZ;
 }
 
 void Equation::calcTimeVector() {
@@ -127,8 +127,8 @@ void Equation::calcTimeVector() {
   double fullStepsN;
   auto lastStep = std::modf(division, &fullStepsN);
   auto _timeSteps = std::vector<double>(fullStepsN, configTimeStep);
-  if (lastStep > 0)
-    _timeSteps.push_back(lastStep * configTimeStep);
+  /*if (lastStep > 0)
+    _timeSteps.push_back(lastStep * configTimeStep);*/
   timeSteps = _timeSteps;
 
 }
@@ -176,14 +176,14 @@ void Equation::cfdProcedure(const std::string &boundCond,
 
 
   double timeCurr;
-  for (int i = 0; i <= timeSteps.size(); i++) {
+  for (int i = 0; i < timeSteps.size(); i++) {
 
     timeCurr += timeSteps[i];
 
     cfdProcedureOneStep(boundCond, props.concLeft,
-                        props.XCoordIn,
-                        props.XCoordOut,
-                        props.lenY,
+                        props.YCoordIn,
+                        props.YCoordOut,
+                        props.lenX,
                         volumes, surfaces,
                         timeSteps[i]);
 

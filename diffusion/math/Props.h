@@ -19,9 +19,9 @@ public:
 
   double time;
   double timeStep;
-  double XCoordIn;
-  double XCoordOut;
-  double lenY;
+  double YCoordIn;
+  double YCoordOut;
+  double lenX;
   double lenZ;
   int gridBlockN;
   double concLeft;
