@@ -10,26 +10,27 @@ class Props {
 
 public:
 
-    explicit Props(
-            const std::map<std::string, std::variant<int, double>> &params);
+  explicit Props(
+      const std::map<std::string, std::variant<int, double>> &params);
 
-    virtual ~Props() {}
+  virtual ~Props() {}
 
-    std::map<std::string, std::variant<int, double>> _params;
+  std::map<std::string, std::variant<int, double>> _params;
 
-    double time;
-    double timeStep;
-    double XCoordIn;
-    double XCoordOut;
-    double lenY;
-    double lenZ;
-    int gridBlockN;
-    double concLeft;
-    double concRight;
-    double diffusivity;
-    double iterativeAccuracy;
+  double time;
+  double timeStep;
+  double XCoordIn;
+  double XCoordOut;
+  double lenY;
+  double lenZ;
+  int gridBlockN;
+  double concLeft;
+  double concInit;
+  double diffusivity;
+  double density;
+  double iterativeAccuracy;
 
-    void printParams();
+  void printParams();
 
 private:
 

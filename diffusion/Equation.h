@@ -22,68 +22,66 @@ class Equation {
 
 public:
 
-    explicit Equation(
-            const std::map<std::string, std::variant<int, double>> &params);
+  explicit Equation(
+      const std::map<std::string, std::variant<int, double>> &params);
 
-    virtual ~Equation() = default;
+  virtual ~Equation() = default;
 
-    void calculateMatrix();
+  void calculate();
 
-    void calculateFreeVector(const double &conc_in);
+  void calculateMatrix();
 
-    void calculateGuessVector();
+  void calculateFreeVector(const double &conc_in);
 
-    void calculateConc();
+  void calculateGuessVector();
 
-    void calcConcIni(const double &concIni);
+  void calculateConc();
 
-    void calcTimeVector();
+  void calcConcIni(const double &concIni);
 
-    void forceDirichletBound(const double &concIni);
+  void calcTimeVector();
 
-    void cfdProcedureOneStep(const std::string &boundCond,
-                             const double &concThrWall,
-                             const double &radius,
-                             const double &effRadius,
-                             const double &thrLength,
-                             const std::vector<double> &volumes,
-                             const std::vector<double> &surfaces,
-                             const double &dt);
+  void forceDirichletBound(const double &concIni);
 
-    void cfdProcedure(const std::string &boundCond,
-                      const std::vector<double> &volumes,
-                      const std::vector<double> &surfaces);
+  void cfdProcedureOneStep(const std::string &boundCond,
+                           const double &concThrWall,
+                           const double &radius,
+                           const double &effRadius,
+                           const double &thrLength,
+                           const std::vector<double> &volumes,
+                           const std::vector<double> &surfaces,
+                           const double &dt);
+
+  void cfdProcedure(const std::string &boundCond,
+                    const std::vector<double> &volumes,
+                    const std::vector<double> &surfaces);
 
 
-    void calcFlowRate();
+  void calcVelocity();
 
-    int &dim;
+  int &dim;
 
-    std::vector<std::vector<double>> conc;
-    std::vector<double> timeStepsVec;
-    std::map<double, std::vector<double>> concs;
+  std::vector<std::vector<double>> conc;
+  std::vector<double> timeSteps;
+  std::vector<double> times;
+  std::vector<std::vector<double>> concs;
 
-    const std::vector<double> getConc() const;
+  Props props;
+  Local local;
+  Convective convective;
 
-    const double getFlowRate() const;
+  double &time;
+  int iCurr;
+  int iPrev;
 
-    const std::vector<double> getRadCurr() const;
+  double velocity;
+  std::vector<double> velocities;
 
-    Props props;
-    Local local;
-    Convective convective;
+  Matrix matrix;
 
-    double &time;
-    int iCurr;
-    int iPrev;
-
-    double flowRate;
-
-    Matrix matrix;
-
-    Vector freeVector;
-    Vector guessVector;
-    Vector variable;
+  Vector freeVector;
+  Vector guessVector;
+  Vector variable;
 
 };
 

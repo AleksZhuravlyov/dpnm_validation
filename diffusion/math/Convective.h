@@ -31,8 +31,6 @@ public:
     std::vector<double> beta;
 
 
-    const std::vector<double> getOmegaCartes() const;
-
 };
 
 #endif
