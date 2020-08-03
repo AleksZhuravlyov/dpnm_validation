@@ -1,0 +1,7 @@
+#ifndef CONVECTION_CONVECTION_H
+#define CONVECTION_CONVECTION_H
+
+
+void calculate();
+
+#endif // CONVECTION_CONVECTION_H

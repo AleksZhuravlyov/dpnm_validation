@@ -6,4 +6,5 @@ project(dpn_validation)
 
 add_subdirectory(diffusion)
 add_subdirectory(sgrid)
+add_subdirectory(convection)
 

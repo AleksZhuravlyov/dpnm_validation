@@ -12,7 +12,7 @@ Props::Props(
       YCoordOut(std::get<double>(_params["y_coord_out"])),
       lenX(std::get<double>(_params["len_x"])),
       lenZ(std::get<double>(_params["len_z"])),
-      gridBlockN(std::get<int>(_params["grid_block_n"])),
+      gridBlockN(std::get<int>(_params["grid_block_y_n"])),
       concLeft(std::get<double>(_params["conc_left"])),
       concInit(std::get<double>(_params["conc_init"])),
       diffusivity(std::get<double>(_params["diffusivity"])),
