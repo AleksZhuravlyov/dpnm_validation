@@ -170,12 +170,12 @@ void Equation::cfdProcedure(const std::string &boundCond,
   calcTimeVector();
   calcConcIni(props.concInit);
 
-  times.push_back(0);
+  times.push_back(props.timeEquil);
   concs.push_back(conc[iCurr]);
   velocities.push_back(0);
 
 
-  double timeCurr;
+  double timeCurr = props.timeEquil;
   for (int i = 0; i < timeSteps.size(); i++) {
 
     timeCurr += timeSteps[i];

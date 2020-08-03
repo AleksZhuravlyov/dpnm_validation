@@ -17,6 +17,7 @@ public:
 
   std::map<std::string, std::variant<int, double>> _params;
 
+  double timeEquil;
   double time;
   double timeStep;
   double YCoordIn;

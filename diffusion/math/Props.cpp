@@ -6,13 +6,14 @@ Props::Props(
     const std::map<std::string, std::variant<int, double>> &params)
 
     : _params(params),
+      timeEquil(std::get<double>(_params["time_equil"])),
       time(std::get<double>(_params["time"])),
       timeStep(std::get<double>(_params["time_step"])),
       YCoordIn(std::get<double>(_params["y_coord_in"])),
       YCoordOut(std::get<double>(_params["y_coord_out"])),
       lenX(std::get<double>(_params["len_x"])),
       lenZ(std::get<double>(_params["len_z"])),
-      gridBlockN(std::get<int>(_params["grid_block_y_n"])),
+      gridBlockN(std::get<int>(_params["grid_block_d_n"])),
       concLeft(std::get<double>(_params["conc_left"])),
       concInit(std::get<double>(_params["conc_init"])),
       diffusivity(std::get<double>(_params["diffusivity"])),

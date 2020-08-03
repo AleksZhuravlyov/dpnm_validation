@@ -2,9 +2,11 @@
 #define CONVECTION_CONVECTION_H
 
 #include <vector>
+#include <map>
 
 
-void calculate(const std::vector<double> &velocities,
-               const std::vector<double> &times);
+std::map<std::string, std::vector<double>> calculate(const std::vector<double> &velocities,
+               const std::vector<double> &times,
+               const int &equilStepsN);
 
 #endif // CONVECTION_CONVECTION_H

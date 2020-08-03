@@ -2,12 +2,18 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include "fvCFD.H"
 #include "pisoControl.H"
 
-void calculate(const std::vector<double> &velocities,
-               const std::vector<double> &times) {
+std::map<std::string, std::vector<double>>
+calculate(const std::vector<double> &velocities,
+          const std::vector<double> &times,
+          const int &equilStepsN) {
+
+
+  std::map<std::string, std::vector<double>> results;
 
   int argc = 3;
 
@@ -35,16 +41,23 @@ void calculate(const std::vector<double> &velocities,
   Info << "\nStarting time loop\n" << endl;
 
   const label &topId = mesh.boundaryMesh().findPatchID("top");
-  auto UTopSize = U.boundaryFieldRef()[topId].size();
   const label &outletId = mesh.boundaryMesh().findPatchID("outlet");
+
+
+  auto UTopSize = U.boundaryFieldRef()[topId].size();
+  auto UOutletSize = U.boundaryFieldRef()[outletId].size();
   int timeInd = 0;
+
+  double UCur = 0;
+
 
   while (runTime.loop()) {
     Info << "Time = " << runTime.timeName() << nl << endl;
 
 
-    for (int i = 0; i < UTopSize; i++)
-      U.boundaryFieldRef()[topId][i][1] = -velocities[timeInd + 1];
+    if (timeInd >= equilStepsN)
+      for (int i = 0; i < UTopSize; i++)
+        U.boundaryFieldRef()[topId][i][1] = -velocities[timeInd + 1 - equilStepsN];
 
 
 #include "CourantNo.H"
@@ -141,13 +154,29 @@ void calculate(const std::vector<double> &velocities,
          << "  ClockTime = " << runTime.elapsedClockTime() << " s"
          << nl << endl;
 
+    if (timeInd >= (equilStepsN - 1)) {
+
+      UCur = 0;
+      for (int i = 0; i < UTopSize; i++)
+        UCur -= U.boundaryFieldRef()[topId][i][1];
+      results["U_release_av"].push_back(UCur / UTopSize);
+
+      UCur = 0;
+      for (int i = 0; i < UOutletSize; i++)
+        UCur += U.boundaryFieldRef()[outletId][i][0];
+      results["U_outlet_av"].push_back(UCur / UOutletSize);
+    } else {
+      UCur = 0;
+      for (int i = 0; i < UOutletSize; i++)
+        UCur += U.boundaryFieldRef()[outletId][i][0];
+      results["U_outlet_equil_av"].push_back(UCur / UOutletSize);
+    }
+
     timeInd++;
+
   }
 
   Info << "End\n" << endl;
+
+  return results;
 }
-
-
-
-
-// ************************************************************************* //

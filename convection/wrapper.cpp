@@ -8,5 +8,5 @@ using namespace pybind11::literals;
 
 PYBIND11_MODULE(convection, m) {
       m.def("calculate", &calculate,
-            "velocities"_a,"times"_a);
+            "velocities"_a,"times"_a, "equil_steps_n"_a);
 }
