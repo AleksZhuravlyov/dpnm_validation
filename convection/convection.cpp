@@ -6,10 +6,10 @@
 #include "fvCFD.H"
 #include "pisoControl.H"
 
-void calculate() {
+void calculate(const std::vector<double> &velocities,
+               const std::vector<double> &times) {
 
   int argc = 3;
-
 
   char arg0[] = "program";
   char arg1[] = "-case";
@@ -20,24 +20,10 @@ void calculate() {
   argv[1] = arg1;
   argv[2] = arg2;
 
-
-  for (int i = 0; i < argc; i++)
-    std::cout << "arg " << i << ": " << argv[i] << std::endl;
-
-
-  // exit(0);
-
 #include "setRootCaseLists.H"
 #include "createTime.H"
 #include "createMesh.H"
 
-
-  /*runTime.setDeltaT(0.1);
-  runTime.setEndTime(80);
-
-  std::cout << "runTime.deltaT().value() " << runTime.deltaT().value() << std::endl;
-  std::cout << "runTime.endTime().value() " << runTime.endTime().value() << std::endl;
-*/
   pisoControl piso(mesh);
 
 #include "createFields.h"
@@ -48,8 +34,18 @@ void calculate() {
 
   Info << "\nStarting time loop\n" << endl;
 
+  const label &topId = mesh.boundaryMesh().findPatchID("top");
+  auto UTopSize = U.boundaryFieldRef()[topId].size();
+  const label &outletId = mesh.boundaryMesh().findPatchID("outlet");
+  int timeInd = 0;
+
   while (runTime.loop()) {
     Info << "Time = " << runTime.timeName() << nl << endl;
+
+
+    for (int i = 0; i < UTopSize; i++)
+      U.boundaryFieldRef()[topId][i][1] = -velocities[timeInd + 1];
+
 
 #include "CourantNo.H"
 
@@ -144,6 +140,8 @@ void calculate() {
     Info << "ᕦ(ò_óˇ)ᕤ ExecutionTime = " << runTime.elapsedCpuTime() << " s"
          << "  ClockTime = " << runTime.elapsedClockTime() << " s"
          << nl << endl;
+
+    timeInd++;
   }
 
   Info << "End\n" << endl;

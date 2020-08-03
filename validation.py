@@ -15,7 +15,7 @@ import convection
 
 # Diffusion
 
-time = 7.  # calculation time in sec
+time = 30.  # calculation time in sec
 time_step = 0.25  # time step in sec
 y_coord_in = 10.0  # length (m) is the length of the inner boundary
 y_coord_out = 13.0  # length (m) is the length of the outer boundary
@@ -130,4 +130,6 @@ foam_content[
 with FoamFile(file_name, "w", foam_class="dictionary") as f:
     f.write(foam_content)
 
-convection.calculate()
+print(equation.velocities)
+
+convection.calculate(equation.velocities, equation.times)
