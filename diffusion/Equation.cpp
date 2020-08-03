@@ -115,8 +115,9 @@ void Equation::calculateConc() {
 void Equation::calcVelocity() {
   velocity = 0;
   for (int i = 0; i < conc[iCurr].size(); i++)
-    velocity -= conc[iCurr][i] - conc[iPrev][i];
-  velocity /= props.density * props.lenX * props.lenZ;
+    velocity -= (conc[iCurr][i] - conc[iPrev][i]) * local.volCartes[i];
+
+  velocity /= props.density * props.lenX * props.lenZ * props.timeStep;
 }
 
 void Equation::calcTimeVector() {

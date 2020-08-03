@@ -15,17 +15,18 @@ import convection
 
 # Diffusion
 
-time_equil = 100.
-time = 20.  # calculation time in sec
-time_step = 1  # time step in sec
-y_coord_in = 5.0  # length (m) is the length of the inner boundary
-y_coord_out = 15.0  # length (m) is the length of the outer boundary
-len_x = 20.  # length of grid block in x direction
-len_z = 10.  # length of grid_block in z direction
+time_equil = 0.005
+time = 0.002  # calculation time in sec
+time_step = 0.000002  # time step in sec
+y_coord_in = 0.002  # length (m) is the length of the inner boundary
+y_coord_out = 0.006  # length (m) is the length of the outer boundary
+len_x = 0.01  # length of grid block in x direction
+len_z = 0.01  # length of grid_block in z direction
 grid_block_d_n = 100  # grid_block_n is a number of diffusion grid blocks
 conc_left = 2.0  # outer concentration (density) (kg/m3)
-conc_init = 10.0  # outer concentration (kg/m3)
-diffusivity = 5.e-2  # diffusion coefficient (m2/sec)
+conc_init = 2.001  # outer concentration (kg/m3)
+density = 2.0  # density (kg/m3)
+diffusivity = 5.e-3  # diffusion coefficient (m2/sec)
 it_accuracy = 1.e-20  # accuracy for iterative procedures
 
 params = {'time_equil': float(time_equil),
@@ -39,7 +40,7 @@ params = {'time_equil': float(time_equil),
           'conc_left': float(conc_left),
           'conc_init': float(conc_init),
           'diffusivity': float(diffusivity),
-          'density': float(conc_left),
+          'density': float(density),
           'it_accuracy': float(it_accuracy)}
 
 equation = Equation(params)
@@ -60,18 +61,20 @@ files_names = list()
 files_descriptions = list()
 for i in range(len(equation.times)):
     sgrid.cells_arrays = {'conc': np.array(equation.concs[i])}
-    files_names.append(str(round(equation.times[i], 3)) + '.vtu')
-    files_descriptions.append(str(round(equation.times[i], 3)))
+    files_names.append(str(round(equation.times[i], 8)) + '.vtu')
+    files_descriptions.append(str(round(equation.times[i], 8)))
     sgrid.save('inOut/diffusion/' + files_names[i])
 save_files_collection_to_file(file_name, files_names, files_descriptions)
 
+print(equation.velocities)
+
 # Convection
 
-grid_block_x_n = 100  # grid_block_x_n is a x number of convection grid blocks
-grid_block_y_n = 100  # grid_block_y_n is a y number of convection grid blocks
-viscosity = 1.99e-5  # viscosity (m2/sec)
-p_inlet = 0.06  # inlet pressure (m2/sec2)
-p_outlet = 0.05  # outlet pressure (m2/sec2)
+grid_block_x_n = 10  # grid_block_x_n is a x number of convection grid blocks
+grid_block_y_n = 10  # grid_block_y_n is a y number of convection grid blocks
+viscosity = 2.e-2 / params['density']  # viscosity (m2/sec)
+p_inlet = 300007.0 / params['density']  # inlet pressure (m2/sec2)
+p_outlet = 300000.0 / params['density']  # outlet pressure (m2/sec2)
 
 params['grid_block_x_n'] = int(grid_block_x_n)
 params['grid_block_y_n'] = int(grid_block_y_n)
@@ -87,6 +90,15 @@ with FoamFile(file_name) as f:
     foam_content = f.read()
 foam_content['endTime'] = params['time'] + params['time_equil']
 foam_content['deltaT'] = params['time_step']
+with FoamFile(file_name, "w", foam_class="dictionary") as f:
+    f.write(foam_content)
+
+# transportProperties
+
+file_name = 'inOut/convection/constant/transportProperties'
+with FoamFile(file_name) as f:
+    foam_content = f.read()
+foam_content['nu'] = '[0 2 -1 0 0 0 0] ' + str(params['viscosity'])
 with FoamFile(file_name, "w", foam_class="dictionary") as f:
     f.write(foam_content)
 
@@ -138,7 +150,8 @@ os.system('rm -r inOut/convection/[1-9]*')
 os.system('rm -r inOut/convection/0.*')
 
 equil_steps_n = int(params['time_equil'] / params['time_step'])
-results = convection.calculate(equation.velocities, equation.times, equil_steps_n)
+results = convection.calculate(equation.velocities, equation.times,
+                               equil_steps_n)
 
 os.system('open -a ParaView-5.8.0.app inOut/diffusion/collection.pvd ')
 os.system('open -a ParaView-5.8.0.app inOut/convection/system/controlDict.foam')
