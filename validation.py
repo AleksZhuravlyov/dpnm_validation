@@ -4,6 +4,8 @@ import numpy as np
 
 from foamfile import FoamFile
 
+import json
+
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path))
 print(current_path)
@@ -70,7 +72,7 @@ print(equation.velocities)
 
 # Convection
 
-grid_block_x_n = 10  # grid_block_x_n is a x number of convection grid blocks
+grid_block_x_n = 30  # grid_block_x_n is a x number of convection grid blocks
 grid_block_y_n = 10  # grid_block_y_n is a y number of convection grid blocks
 viscosity = 2.e-2 / params['density']  # viscosity (m2/sec)
 p_inlet = 300007.0 / params['density']  # inlet pressure (m2/sec2)
@@ -161,3 +163,12 @@ print(results['U_release_av'])
 print(results['U_outlet_av'])
 print()
 print(results['U_outlet_equil_av'])
+print()
+
+np.save('U_release_av', np.array(results['U_release_av']))
+np.save('U_outlet_av', np.array(results['U_outlet_av']))
+np.save('times', np.array(equation.times))
+
+
+with open('params.json', 'w') as f:
+    json.dump(params, f)
