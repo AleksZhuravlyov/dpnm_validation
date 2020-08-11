@@ -6,7 +6,6 @@ import numpy as np
 
 import json
 
-
 with open('params.json', "r") as f:
     params = json.load(f)
 
@@ -40,5 +39,11 @@ data['U_outlet_p'] = U_outlet_p
 
 data = data.drop(0.005)
 
-data.plot()
-plt.show()
+# data.plot()
+# plt.show()
+
+error = 2 * (U_outlet_av - U_outlet_p) / (U_outlet_av + U_outlet_p)
+
+mean = np.mean(error)
+
+print(mean)
